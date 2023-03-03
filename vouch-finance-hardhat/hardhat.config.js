@@ -9,9 +9,12 @@ require("dotenv").config()
 const COINMARKETCAP_API_KEY = process.env.COINMARKETCAP_API_KEY || ""
 const GOERLI_RPC_URL =
     process.env.GOERLI_RPC_URL || "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
+const ARBITRUM_GOERLI_RPC_URL =
+    process.env.ARBITRUM_GOERLI_RPC_URL || "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
 const PRIVATE_KEY =
     process.env.PRIVATE_KEY || "0x11ee3108a03081fe260ecdc106554d09d9d1209bcafd46942b10e02943effc4a"
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
+const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || ""
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
@@ -39,6 +42,13 @@ module.exports = {
             chainId: 5,
             blockConfirmations: 6,
         },
+        arbitrum_goerli: {
+            url: ARBITRUM_GOERLI_RPC_URL,
+            accounts: [PRIVATE_KEY],
+            saveDeployments: true,
+            chainId: 421613,
+            blockConfirmations: 6,
+        },
     },
     gasReporter: {
         enabled: true,
@@ -53,6 +63,7 @@ module.exports = {
     etherscan: {
         apiKey: {
             goerli: ETHERSCAN_API_KEY,
+            arbitrumGoerli: ARBISCAN_API_KEY,
         },
         customChains: [
             {
@@ -72,7 +83,7 @@ module.exports = {
     solidity: {
         compilers: [
             {
-                version: "0.8.17",
+                version: "0.8.11",
             },
             {
                 version: "0.4.24",
