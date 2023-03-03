@@ -22,3 +22,5 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         await verify(vouch.address, [])
     }
 }
+
+module.exports.tags = ["all", "vouch"]

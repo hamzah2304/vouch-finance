@@ -22,3 +22,5 @@ module.exports = async ({ getNamedAccounts, deployments }) => {
         await verify(myContract.address, [])
     }
 }
+
+module.exports.tags = ["all", "myContract"]
