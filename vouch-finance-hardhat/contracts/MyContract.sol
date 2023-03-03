@@ -4,7 +4,7 @@ pragma solidity 0.8.11;
 import "./interfaces/IScoracle.sol";
 
 contract MyContract {
-    address constant SCORACLE_ADDRESS = 0xe953f329041dA0D5Cf23159abc4b45f6fbf8Ab17;
+    address constant SCORACLE_ADDRESS = 0xe953f329041dA0D5Cf23159abc4b45f6fbf8Ab17; // Arbitrum Goerli
 
     constructor() {}
 

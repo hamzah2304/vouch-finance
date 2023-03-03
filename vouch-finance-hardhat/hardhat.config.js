@@ -16,7 +16,6 @@ const PRIVATE_KEY =
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
 const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || ""
 
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
     defaultNetwork: "hardhat",
     // solidity: "0.8.17",
