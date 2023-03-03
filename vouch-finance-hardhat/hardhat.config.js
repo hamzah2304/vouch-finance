@@ -13,6 +13,9 @@ const ARBITRUM_GOERLI_RPC_URL =
     process.env.ARBITRUM_GOERLI_RPC_URL || "https://eth-mainnet.alchemyapi.io/v2/your-api-key"
 const PRIVATE_KEY =
     process.env.PRIVATE_KEY || "0x11ee3108a03081fe260ecdc106554d09d9d1209bcafd46942b10e02943effc4a"
+const PRIVATE_KEY_2 =
+    process.env.PRIVATE_KEY_2 ||
+    "0x11ee3108a03081fe260ecdc106554d09d9d1209bcafd46942b10e02943effc4a"
 const ETHERSCAN_API_KEY = process.env.ETHERSCAN_API_KEY || ""
 const ARBISCAN_API_KEY = process.env.ARBISCAN_API_KEY || ""
 
@@ -43,7 +46,7 @@ module.exports = {
         },
         arbitrum_goerli: {
             url: ARBITRUM_GOERLI_RPC_URL,
-            accounts: [PRIVATE_KEY],
+            accounts: [PRIVATE_KEY, PRIVATE_KEY_2],
             saveDeployments: true,
             chainId: 421613,
             blockConfirmations: 6,

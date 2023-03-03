@@ -2,7 +2,7 @@ const { ethers } = require("hardhat")
 const { SignerWithAddress } = require("@nomiclabs/hardhat-ethers/signers")
 const { Signer } = require("ethers")
 
-export const signNFCMessage = async (account, nfcAddress, chainId) => {
+const signNFCMessage = async (account, nfcAddress, chainId) => {
     const content = "This is the Vouch team. We are verifying ownership of the wallet."
 
     return await account._signTypedData(
@@ -43,6 +43,7 @@ const stringToBytes32 = (text) => {
 }
 
 module.exports = {
+    signNFCMessage,
     signScoracleMessage,
     stringToBytes32,
 }

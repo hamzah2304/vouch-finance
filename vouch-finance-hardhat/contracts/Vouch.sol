@@ -3,10 +3,10 @@ pragma solidity 0.8.11;
 
 import "./NFC.sol";
 
-error VoucherNoNFC();
-error VoucheeNoNFC();
-error AlreadyVouchedForUser();
-error NotVouchedForUser();
+error Vouch__VoucherNoNFC();
+error Vouch__VoucheeNoNFC();
+error Vouch__AlreadyVouchedForUser();
+error Vouch__NotVouchedForUser();
 
 contract Vouch {
     //===============Events===============
@@ -16,8 +16,11 @@ contract Vouch {
 
     //===============State Variables===============
 
+    address constant NFC_ADDRESS = 0x91e1156d5Fba6b1B251f396e96aFAaCE91394283; // Arbitrum Goerli Spectral
     mapping(address => mapping(address => bool)) public vouchLookup; // voucher => (vouchee => true/false)
     mapping(address => mapping(address => bool)) public vouchReverseLookup; // vouchee => (voucher => true/false)
+
+    //===============Modifiers===============
 
     //===============Main Functions===============
 
@@ -26,11 +29,17 @@ contract Vouch {
     //
 
     function vouch(address vouchee) public {
-        // require msg.sender to have an NFC
-        // require vouchee to have an NFC
-
+        NFC nfc = NFC(NFC_ADDRESS);
+        // Voucher and vouchee must have minted an NFC
+        if (!nfc.isInNFC(msg.sender)) {
+            revert Vouch__VoucherNoNFC();
+        }
+        if (!nfc.isInNFC(vouchee)) {
+            revert Vouch__VoucheeNoNFC();
+        }
+        // Voucher must have higher MACRO score than vouchee
         if (vouchLookup[msg.sender][vouchee]) {
-            revert AlreadyVouchedForUser();
+            revert Vouch__AlreadyVouchedForUser();
         }
         vouchLookup[msg.sender][vouchee] = true;
         vouchReverseLookup[vouchee][msg.sender] = true;
@@ -42,7 +51,7 @@ contract Vouch {
         // require vouchee to have an NFC
 
         if (!vouchLookup[msg.sender][vouchee]) {
-            revert NotVouchedForUser();
+            revert Vouch__NotVouchedForUser();
         }
 
         vouchLookup[msg.sender][vouchee] = false;
