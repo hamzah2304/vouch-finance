@@ -11,12 +11,28 @@ error Vouch__NotVouchedForUser();
 error Vouch__TooManyVouches();
 error Vouch__VoucherLower();
 error Vouch__TooLowScore();
+error Vouch__ClawbackFailed();
+error Vouch__ReturnCollateralFailed();
+error Vouch__YieldPaymentFailed();
 
 contract Vouch {
     //===============Events===============
 
     event UserVouched(address indexed voucher, address indexed vouchee);
     event UserUnvouched(address indexed voucher, address indexed vouchee);
+    event CollateralPosted(address indexed voucher, address indexed vouchee, uint indexed amount);
+    event CollateralClawedBack(
+        address indexed voucher,
+        address indexed vouchee,
+        uint indexed amount
+    );
+    event CollateralReturned(
+        address indexed voucher,
+        address indexed vouchee,
+        uint amount,
+        uint yield
+    );
+    event YieldPosted(address indexed voucher, address indexed vouchee, uint indexed amount);
 
     //===============State Variables===============
 
@@ -26,6 +42,8 @@ contract Vouch {
 
     mapping(address => mapping(address => bool)) public vouchLookup; // voucher => (vouchee => true/false)
     mapping(address => mapping(address => bool)) public vouchReverseLookup; // vouchee => (voucher => true/false)
+    mapping(address => mapping(address => uint)) public vouchCollateral;
+    mapping(address => mapping(address => uint)) public vouchCollateralYield; // voucher => (vouchee => amount of yield)
     mapping(address => uint) public vouchCount; // voucher => number of vouches
 
     //===============Modifiers===============
@@ -37,6 +55,7 @@ contract Vouch {
     //
 
     function vouch(address vouchee) public {
+        // check that vouchee has not taken out loan
         NFC nfc = NFC(NFC_ADDRESS);
         IScoracle scoracle = IScoracle(SCORACLE_ADDRESS);
         // Voucher and vouchee must have each minted an NFC
@@ -85,7 +104,7 @@ contract Vouch {
         vouchLookup[msg.sender][vouchee] = false;
         vouchReverseLookup[vouchee][msg.sender] = false;
         vouchCount[msg.sender] -= 1;
-        emit UserVouched(msg.sender, vouchee);
+        emit UserUnvouched(msg.sender, vouchee);
     }
 
     /**
@@ -108,5 +127,66 @@ contract Vouch {
         if (800 <= score && score <= 850) {
             total = 4;
         }
+    }
+
+    function postCollateral(address vouchee, uint amount) public payable {
+        if (!vouchLookup[msg.sender][vouchee]) {
+            revert Vouch__NotVouchedForUser();
+        }
+        // require collateral posted = collateral required Underwriter.sol
+        vouchCollateral[msg.sender][vouchee] = amount;
+        emit CollateralPosted(msg.sender, vouchee, amount);
+    }
+
+    function postYield(address voucher, address vouchee, uint amount) public payable {
+        // require msg.sender = pool address
+        if (!vouchLookup[voucher][vouchee]) {
+            revert Vouch__NotVouchedForUser();
+        }
+        vouchCollateralYield[voucher][vouchee] = amount;
+        emit YieldPosted(voucher, vouchee, amount);
+    }
+
+    function returnCollateral(address voucher, address vouchee) public {
+        // require msg.sender == LiquidityPool contract address
+        uint amount = vouchCollateral[voucher][vouchee];
+        (bool s, ) = payable(voucher).call{value: amount}("");
+        if (!s) {
+            revert Vouch__ReturnCollateralFailed();
+        }
+        // request and pay back voucher the interest gained
+        uint yield = vouchCollateralYield[voucher][vouchee];
+        (bool success, ) = payable(voucher).call{value: yield}("");
+        if (!success) {
+            revert Vouch__YieldPaymentFailed();
+        }
+        // update data structures
+        vouchCollateral[voucher][vouchee] = 0;
+        vouchCollateralYield[voucher][vouchee] = 0;
+        // INCREASE REPUTATION SCORE
+        // Unvouch for user
+        vouchLookup[msg.sender][vouchee] = false;
+        vouchReverseLookup[vouchee][msg.sender] = false;
+        vouchCount[msg.sender] -= 1;
+
+        emit UserUnvouched(voucher, vouchee);
+        emit CollateralReturned(voucher, vouchee, amount, yield);
+    }
+
+    function clawback(address voucher, address vouchee) public {
+        // require msg.sender == LiquidityPool contract address
+        uint amount = vouchCollateral[voucher][vouchee];
+        (bool s, ) = payable(msg.sender).call{value: amount}("");
+        if (!s) {
+            revert Vouch__ClawbackFailed();
+        }
+        vouchCollateral[voucher][vouchee] = 0;
+        // Unvouch for user
+        vouchLookup[msg.sender][vouchee] = false;
+        vouchReverseLookup[vouchee][msg.sender] = false;
+        vouchCount[msg.sender] -= 1;
+
+        emit UserUnvouched(voucher, vouchee);
+        emit CollateralClawedBack(voucher, vouchee, amount);
     }
 }
