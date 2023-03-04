@@ -11,7 +11,6 @@ const { assert, expect } = require("chai")
           beforeEach(async function () {
               deployer = (await getNamedAccounts()).deployer
               await deployments.fixture("all")
-              myContract = await ethers.getContract("MyContract", deployer)
               vouch = await ethers.getContract("Vouch", deployer)
           })
 

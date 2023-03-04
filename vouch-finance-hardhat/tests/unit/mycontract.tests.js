@@ -2,21 +2,20 @@ const { developmentChains, networkConfig } = require("../../helper-hardhat-confi
 const { ethers, network, getNamedAccounts, deployments } = require("hardhat")
 const { assert, expect } = require("chai")
 
-developmentChains.includes(network.name)
+!developmentChains.includes(network.name)
     ? describe.skip
-    : describe("Vouch", function () {
-          let vouch, voucher, vouchee
+    : describe("MyContract", function () {
+          let vouch, deployer
           const chainId = network.config.chainId
 
           beforeEach(async function () {
-              const [voucher, vouchee] = await ethers.getSigners()
+              deployer = (await getNamedAccounts()).deployer
               await deployments.fixture("all")
-              myContract = await ethers.getContract("MyContract", voucher)
-              vouch = await ethers.getContract("Vouch", voucher)
+              myContract = await ethers.getContract("MyContract", deployer)
           })
 
-          describe("constructor", function () {
-              it("should initialise the raffle correctly", async function () {
+          describe("calculateMacroScore", function () {
+              it("should schedule MACRO score calculation", async function () {
                   const raffleState = await raffle.getRaffleState()
                   assert.equal(raffleState.toString(), "0")
                   assert.equal(interval.toString(), networkConfig[chainId]["interval"])

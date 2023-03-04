@@ -8,7 +8,7 @@ const signNFCMessage = async (account, nfcAddress, chainId) => {
     return await account._signTypedData(
         // Domain
         {
-            name: "Spectral",
+            name: "Spectral NFC",
             version: "1",
             chainId: chainId,
             verifyingContract: nfcAddress,

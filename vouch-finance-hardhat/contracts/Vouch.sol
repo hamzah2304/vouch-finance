@@ -48,12 +48,15 @@ contract Vouch {
         }
         // Voucher must have higher MACRO score than vouchee
         // MACRO score getter function from Scoracle
-        IScoracle.ScoreData memory voucherScoreData = scoracle.getScore(msg.sender, SCORE_TYPE_ID);
-        uint voucherScore = voucherScoreData.score;
-        IScoracle.ScoreData memory voucheeScoreData = scoracle.getScore(vouchee, SCORE_TYPE_ID);
-        uint voucheeScore = voucheeScoreData.score;
+        // IScoracle.ScoreData memory voucherScoreData = scoracle.getScore(msg.sender, SCORE_TYPE_ID);
+        // uint voucherScore = voucherScoreData.score;
+        // IScoracle.ScoreData memory voucheeScoreData = scoracle.getScore(vouchee, SCORE_TYPE_ID);
+        // uint voucheeScore = voucheeScoreData.score;
 
         // Add in spoof logic
+        uint voucherScore = 800;
+        uint voucheeScore = 650;
+
         if (voucherScore < voucheeScore + 10) {
             revert Vouch__VoucherLower();
         }
