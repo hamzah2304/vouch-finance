@@ -7,7 +7,7 @@ import {
   ConnectWalletButton,
   SwitchChainButton,
 } from '../../features/wallet/components'
-import { HumaFullIcon, HumaIcon } from '../../components/icons'
+import { HumaFullIcon, HumaIcon, SpectralIcon } from '../../components/icons'
 import { useMQ } from '../../hooks/useMQ'
 
 export function AppHeader() {
@@ -34,6 +34,12 @@ export function AppHeader() {
       width: auto;
       cursor: pointer;
     `,
+    spectralLogo: css`
+      height: 80px;
+      width: auto;
+      cursor: pointer;
+      fill: transparent;
+    `,
   }
 
   const goToHome = () => {
@@ -48,6 +54,7 @@ export function AppHeader() {
         ) : (
           <HumaFullIcon css={styles.humaLogo} onClick={goToHome} />
         )}
+        <SpectralIcon css={styles.spectralLogo} />
         <Box>
           <SwitchChainButton />
           <ConnectWalletButton />

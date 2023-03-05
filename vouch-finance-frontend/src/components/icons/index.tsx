@@ -1,6 +1,7 @@
 import { SvgIconProps } from '@mui/material'
 import { ReactComponent as HumaLogoSvg } from './huma.svg'
 import { ReactComponent as HumaFullLogoSvg } from './huma-full.svg'
+import { ReactComponent as SpectralLogoSvg } from './spectral.svg'
 import { ReactComponent as MetamaskSvg } from './metamask.svg'
 import { ReactComponent as EthereumSvg } from './ethereum.svg'
 import { ReactComponent as PolygonSvg } from './polygon.svg'
@@ -22,6 +23,10 @@ export function HumaIcon(props: SvgIconProps): React.ReactElement {
 
 export function HumaFullIcon(props: SvgIconProps): React.ReactElement {
   return <HumaFullLogoSvg {...props} />
+}
+
+export function SpectralIcon(props: SvgIconProps): React.ReactElement {
+  return <SpectralLogoSvg {...props} />
 }
 
 export function MetamaskIcon(props: SvgIconProps): React.ReactElement {

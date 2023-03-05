@@ -167,7 +167,7 @@ export function CreditLine(): React.ReactElement {
   )
 
   // HARDCODING FOR DEMO PURPOSES
-  const collateral = true
+  const collateral = false
 
   if (!collateral) {
     return (
