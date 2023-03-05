@@ -31,7 +31,7 @@ export const routes: {
     path: '/vouch',
     component: Vouch,
     isRoot: true,
-  }
+  },
 }
 
 function Router() {

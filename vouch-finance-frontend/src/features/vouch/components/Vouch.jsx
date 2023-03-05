@@ -23,30 +23,6 @@ export function Vouch() {
     `,
   }
 
-  // const { start, score } = useSpectral()
-  // const [myScore, setMyScore] = useState()
-
-  // function scoreRequired() {
-  //   if (!score) {
-  //     console.log('Score not calculated')
-  //     return <ScoreSDK />
-  //   }
-  //   console.log(`Hooray! your score is ${score}`)
-  //   setMyScore(score)
-  //   return (
-  //     <Box css={styles.wrapper}>
-  //       <Box css={styles.poolWrapper}>
-  //         <VouchForm />
-  //       </Box>
-  //       <Background />
-  //     </Box>
-  //   )
-  // }
-
-  // useEffect(() => {
-  //   scoreRequired()
-  // }, [score])
-
   return (
     <Box css={styles.wrapper}>
       <Box css={styles.poolWrapper}>
