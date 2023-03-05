@@ -14,7 +14,7 @@ import { ConnectWalletButton } from '../../../wallet/components'
 
 export function CreditLine(): React.ReactElement {
   const theme = useTheme()
-  const { isLgSize, isSmSize, isXsSize } = useMQ()
+  const { isLgSize, isBelowXsSize, isSmSize, isMdSize, isXsSize } = useMQ()
   const buttonWidth = isLgSize ? 180 : 140
   const poolName = usePoolName()
   const poolInfo = usePoolInfo(poolName, POOL_TYPE.CreditLine)
@@ -58,11 +58,31 @@ export function CreditLine(): React.ReactElement {
       margin: 0 auto;
       margin-bottom: 40px;
     `,
+    poolWrapper: css`
+      position: relative;
+      margin-bottom: 40px;
+      z-index: 1;
+    `,
+    boxWrapper: css`
+      width: 100%;
+      max-width: 1307px;
+      margin: 0 auto;
+      padding: ${isBelowXsSize ? 24 : 48}px;
+      background: linear-gradient(180deg, #ffffff 0%, #ffffff 100%);
+      border: 1px solid #ffffff;
+      border-radius: 24px;
+    `,
     title: css`
       font-family: 'Uni-Neue-Black';
       color: ${theme.palette.text.primary};
       font-size: 24px;
       margin-bottom: 16px;
+    `,
+    heading: css`
+      font-family: 'Uni-Neue-Regular';
+      font-size: ${isLgSize ? 32 : 26}px;
+      color: #6b6572;
+      margin-bottom: 15px;
     `,
     description: css`
       font-family: 'Uni-Neue-Regular';
@@ -145,6 +165,156 @@ export function CreditLine(): React.ReactElement {
     },
     [refreshCLStats, subscribe],
   )
+
+  // HARDCODING FOR DEMO PURPOSES
+  const collateral = true
+
+  if (!collateral) {
+    return (
+      <>
+        <Box css={styles.wrapper}>
+          <Box css={styles.poolWrapper}>
+            <Box css={styles.boxWrapper}>
+              <Box css={styles.heading}>Collateral required</Box>
+              <Box css={styles.description} marginBottom='47px'>
+                Thank you for your confirming the terms of your loan. Your
+                staker must now post the required collateral found at
+                http://localhost:3000/#/vouch
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+        <Box css={styles.wrapper}>
+          <Box css={styles.title}>Credit Lines</Box>
+          <Box css={styles.description} marginBottom='47px'>
+            {PoolMap.CreditLine[poolName].borrowDesc}
+          </Box>
+          <Box css={styles.infoWrapper}>
+            <Grid
+              container
+              spacing={2}
+              columnSpacing={{ md: isApproved ? 0 : 20 }}
+              justifyContent='space-between'
+            >
+              <Grid item xs={12} md={7}>
+                <Box css={styles.infoLeft}>
+                  <Box>
+                    <Box css={styles.infoTitle}>Available Credit</Box>
+                    <Box
+                      css={styles.infoContent(creditAvailableAmount)}
+                      id='credit-line-available-credit'
+                    >
+                      {loading ? (
+                        <Skeleton variant='text' width={80} />
+                      ) : (
+                        <>{formatMoney(creditAvailableAmount)}</>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box>
+                    <Box css={styles.infoTitle}>Current Balance</Box>
+                    <Box
+                      css={styles.infoContent(principalAmount)}
+                      id='credit-line-current-balance'
+                    >
+                      {loading ? (
+                        <Skeleton variant='text' width={80} />
+                      ) : (
+                        <> {formatMoney(principalAmount)}</>
+                      )}
+                    </Box>
+                  </Box>
+                  <Box>
+                    {dueDate ? (
+                      <Box css={styles.infoTitle}>
+                        <Box>Due on {dueDate}</Box>{' '}
+                        <Box css={styles.dueDateOn} />
+                      </Box>
+                    ) : (
+                      <Box css={styles.infoTitle}>Due</Box>
+                    )}
+                    <Box css={styles.infoContent(totalDueAmount)}>
+                      {loading ? (
+                        <Skeleton variant='text' width={80} />
+                      ) : (
+                        <> {formatMoney(totalDueAmount)}</>
+                      )}
+                    </Box>
+                  </Box>
+                </Box>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={5}
+                display='flex'
+                alignItems='flex-end'
+                justifyContent='flex-end'
+                width='100%'
+              >
+                <Box css={styles.infoRight}>
+                  {isActive && (
+                    <>
+                      <Button
+                        id='credit-line-pay-btn'
+                        css={styles.button}
+                        variant='contained'
+                        sx={{ marginRight: '24px' }}
+                        disabled={payoffAmount <= 0}
+                        onClick={handlePay}
+                      >
+                        PAY
+                      </Button>
+                      {!isApproved ? (
+                        <Button
+                          css={styles.button}
+                          variant='contained'
+                          onClick={handleBorrow}
+                        >
+                          OPEN A CREDIT LINE
+                        </Button>
+                      ) : (
+                        <Button
+                          id='credit-line-borrow-btn'
+                          css={styles.button}
+                          variant='contained'
+                          disabled={creditAvailableAmount === 0}
+                          onClick={handleBorrow}
+                        >
+                          BORROW
+                        </Button>
+                      )}
+                    </>
+                  )}
+                  {!isActive && (
+                    <ConnectWalletButton
+                      text='CONNECT YOUR WALLET'
+                      variant='contained'
+                    />
+                  )}
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+          {creditRecord && creditRecordStatic && poolInfo && actionType && (
+            <CreditLineSDK
+              creditRecord={creditRecord}
+              creditRecordStatic={creditRecordStatic}
+              creditAvailableAmount={creditAvailableAmount}
+              payoffAmount={payoffAmount}
+              totalDueAmount={totalDueAmount}
+              poolInfo={poolInfo}
+              isOpen={modalIsOpen}
+              handleClose={handleClose}
+              handleApprove={handleApproveSuccess}
+              handleSuccess={handleSuccess}
+              actionType={actionType}
+            />
+          )}
+        </Box>
+      </>
+    )
+  }
 
   return (
     <Box css={styles.wrapper}>

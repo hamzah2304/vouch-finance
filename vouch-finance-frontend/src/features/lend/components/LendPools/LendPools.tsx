@@ -4,6 +4,8 @@ import { Background } from '../../../../components/Background'
 
 import { POOL_NAME, POOL_TYPE, PoolMap } from '../../../../utils/pool'
 import { LendCreditLinePool } from './LendCreditLinePool'
+import { LowLendCreditLinePool } from './LowLendCreditLinePool'
+import { HighLendCreditLinePool } from './HighLendCreditLinePool'
 
 export function LendPools(): React.ReactElement {
   const creditLinePoolNames = Object.keys(
@@ -26,14 +28,12 @@ export function LendPools(): React.ReactElement {
 
   return (
     <Box css={styles.wrapper}>
-      {creditLinePoolNames.map((creditLinePoolName) => (
-        <Box css={styles.poolWrapper} key={creditLinePoolName}>
-          <LendCreditLinePool
-            poolName={creditLinePoolName}
-            key={creditLinePoolName}
-          />
-        </Box>
-      ))}
+      <Box css={styles.poolWrapper}>
+        <HighLendCreditLinePool poolName={creditLinePoolNames[0]} />
+      </Box>
+      <Box css={styles.poolWrapper}>
+        <LowLendCreditLinePool poolName={creditLinePoolNames[0]} />
+      </Box>
       <Background />
     </Box>
   )

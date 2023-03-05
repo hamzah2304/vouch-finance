@@ -106,7 +106,11 @@ export function VouchForm({ infoOneRow = false }) {
       title: 'Search',
       value: (
         <form>
-          <input type='text' placeholder='0x1d...89dA' />
+          <input
+            style={{ width: '600px', height: '40px' }}
+            type='text'
+            placeholder='0x1d...89dA'
+          />
         </form>
       ),
       isLoading: false,

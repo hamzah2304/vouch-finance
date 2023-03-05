@@ -26,9 +26,6 @@ export function Vouch() {
   return (
     <Box css={styles.wrapper}>
       <Box css={styles.poolWrapper}>
-        <Score />
-      </Box>
-      <Box css={styles.poolWrapper}>
         <VouchForm />
       </Box>
       <Background />

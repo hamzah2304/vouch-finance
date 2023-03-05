@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { Suspense } from 'react'
 import { HashRouter } from 'react-router-dom'
+import { SpectralProvider } from '@spectral-finance/spectral-modal'
 
 import { AppFooter } from './app/components/AppFooter'
 import { AppHeader } from './app/components/AppHeader'
@@ -18,28 +19,32 @@ import Router from './Router'
 import { AppGlobalStyles } from './theme/AppGlobalStyles'
 import { Web3ProviderListener } from './components/Web3ProviderListener'
 
+const PARTNER_ID = process.env.REACT_APP_SPECTRAL_PARTNER_KEY
+
 function App() {
   return (
     <AppContainer>
-      <Web3Provider>
-        <Web3ProviderListener>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <HashRouter>
-              <AppGlobalStyles />
-              <AppHeader />
-              <ConnectWalletModal />
-              <HumaSwitch />
-              <HumaSnackBar />
-              <ErrorBoundary>
-                <Suspense fallback={<Loading fullScreen />}>
-                  <Router />
-                </Suspense>
-              </ErrorBoundary>
-              <AppFooter />
-            </HashRouter>
-          </LocalizationProvider>
-        </Web3ProviderListener>
-      </Web3Provider>
+      <SpectralProvider logo='' partnerId={PARTNER_ID}>
+        <Web3Provider>
+          <Web3ProviderListener>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <HashRouter>
+                <AppGlobalStyles />
+                <AppHeader />
+                <ConnectWalletModal />
+                <HumaSwitch />
+                <HumaSnackBar />
+                <ErrorBoundary>
+                  <Suspense fallback={<Loading fullScreen />}>
+                    <Router />
+                  </Suspense>
+                </ErrorBoundary>
+                <AppFooter />
+              </HashRouter>
+            </LocalizationProvider>
+          </Web3ProviderListener>
+        </Web3Provider>
+      </SpectralProvider>
     </AppContainer>
   )
 }
