@@ -1,4 +1,4 @@
-import { css, useTheme } from '@emotion/react'
+import { css, useTheme, jsx } from '@emotion/react'
 import { Box, Grid, Skeleton } from '@mui/material'
 import { ReactElement } from 'react'
 import { useMQ } from '../../hooks/useMQ'
@@ -9,10 +9,10 @@ type Props = {
   items: {
     id: string
     title: string
-    value: string | number | undefined
+    value: string | number | undefined | JSX.Element | React.ReactElement
     isLoading: boolean
   }[]
-  buttons: React.ReactNode[]
+  buttons: React.ReactNode[] | []
   buttonWidth: number
   infoOneRow?: boolean
   id?: string

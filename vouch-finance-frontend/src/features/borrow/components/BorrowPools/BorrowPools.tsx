@@ -5,6 +5,8 @@ import { Background } from '../../../../components/Background'
 import { POOL_NAME, POOL_TYPE, PoolMap } from '../../../../utils/pool'
 import { BorrowCreditLinePool } from './BorrowCreditLinePool'
 
+import { Score } from '../../../score/components/Score'
+
 export function BorrowPools(): React.ReactElement {
   const creditLinePoolNames = Object.keys(
     PoolMap[POOL_TYPE.CreditLine],
@@ -26,6 +28,9 @@ export function BorrowPools(): React.ReactElement {
 
   return (
     <Box css={styles.wrapper}>
+      {/* <Box css={styles.poolWrapper}>
+        <Score />
+      </Box> */}
       {creditLinePoolNames.map((creditLinePoolName) => (
         <Box css={styles.poolWrapper} key={creditLinePoolName}>
           <BorrowCreditLinePool

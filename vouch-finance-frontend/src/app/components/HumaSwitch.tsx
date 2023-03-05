@@ -9,11 +9,19 @@ export function HumaSwitch() {
   const theme = useTheme()
   const history = useHistory()
   const { pathname } = useLocation()
-  const [checked, setChecked] = useState<'left' | 'right'>()
+  const [checked, setChecked] = useState<string>()
 
   useEffect(() => {
-    const type =
-      pathname === '/' || pathname.startsWith('/borrow') ? 'left' : 'right'
+    let type;
+    if (pathname === '/' || pathname.startsWith('/borrow')) {
+      type = 'left'
+    }
+    if (pathname.startsWith('/vouch')) {
+      type = 'middle'
+    }
+    if (pathname.startsWith('/lend')){
+      type = 'right'
+    }
     setChecked(type)
   }, [pathname])
 
@@ -67,15 +75,21 @@ export function HumaSwitch() {
     right: css`
       ${checked === 'right' ? checkedStyle : uncheckedStyle}
     `,
+    middle: css`
+      ${checked === 'middle' ? checkedStyle : uncheckedStyle}
+    `,
   }
 
-  const onSwitch = (side: 'left' | 'right') => {
+  const onSwitch = (side: 'left' | 'right' | 'middle') => {
     setChecked(side)
     if (side === 'left') {
       history.push(routes.borrow.path)
     }
     if (side === 'right') {
       history.push(routes.lend.path)
+    }
+    if (side === 'middle') {
+      history.push(routes.vouch.path)
     }
   }
 
@@ -91,6 +105,16 @@ export function HumaSwitch() {
           onClick={() => onSwitch('left')}
         >
           <Box>BORROW</Box>
+        </Button>
+        <Button
+        variant='outlined'
+          css={css`
+            ${styles.button};
+            ${styles.middle}
+          `}
+          onClick={() => onSwitch('middle')}
+        >
+          <Box>VOUCH</Box>
         </Button>
         <Button
           variant='outlined'

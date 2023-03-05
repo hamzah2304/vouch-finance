@@ -4,6 +4,7 @@ import { Redirect, Route } from 'react-router-dom'
 import { Switch404 } from './components/Switch404'
 import { BorrowPools, CreditLine } from './features/borrow/components'
 import { LendPools } from './features/lend/components'
+import { Vouch } from './features/vouch/components/Vouch'
 
 export const routes: {
   [page: string]: {
@@ -26,6 +27,11 @@ export const routes: {
     component: LendPools,
     isRoot: true,
   },
+  vouch: {
+    path: '/vouch',
+    component: Vouch,
+    isRoot: true,
+  }
 }
 
 function Router() {
