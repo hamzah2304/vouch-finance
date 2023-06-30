@@ -1,5 +1,7 @@
 # Vouch Finance
 
+Winner of Huma Finance and Spectral.finance prizes at ETH Denver 2023
+
 Undercollateralized lending protocol enabled by social staking and credit reputation systems.
 
 The aim of the Vouch Finance protocol is to address the prevalence of exclusively overcollateralized on-chain lending protocols.
